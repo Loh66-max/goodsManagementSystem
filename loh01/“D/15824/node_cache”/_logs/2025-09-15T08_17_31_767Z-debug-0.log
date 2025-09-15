@@ -1,0 +1,12 @@
+0 verbose cli D:\15824\node.exe D:\15824\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.2
+2 info using node@v22.15.0
+3 silly config load:file:D:\15824\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\15824\IdeaProjects\goodsManagement\loh01\.npmrc
+5 silly config load:file:C:\Users\15824\.npmrc
+6 silly config load:file:D:\15824\etc\npmrc
+7 verbose title npm run serve
+8 verbose argv "run" "serve"
+9 verbose logfile logs-max:10 dir:C:\Users\15824\IdeaProjects\goodsManagement\loh01\“D\15824\node_cache”\_logs\2025-09-15T08_17_31_767Z-
+10 verbose logfile C:\Users\15824\IdeaProjects\goodsManagement\loh01\“D\15824\node_cache”\_logs\2025-09-15T08_17_31_767Z-debug-0.log
+11 silly logfile done cleaning log files
