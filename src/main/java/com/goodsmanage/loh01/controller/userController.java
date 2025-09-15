@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -46,8 +48,10 @@ public class userController {
     @GetMapping("/getUserList")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10")Integer pageSize){
         Integer total =  userservice.total();
-        List<user> row = userservice.row(page-1,pageSize);
-        log.info("获取用户列表成功！列表字段总数为："+total);
-        return Result.success(row);
+        List<user> row = userservice.row((page-1)*10,pageSize);
+        Map<String,Object> map = new HashMap<>();
+        map.put("total",total);
+        map.put("list",row);
+        return Result.success(map);
     }
 }

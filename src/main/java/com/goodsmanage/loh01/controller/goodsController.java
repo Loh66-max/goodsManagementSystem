@@ -53,35 +53,35 @@ public class goodsController {
         // 返回成功响应，包含商品列表数据
     }
     @PostMapping("/createGoods")
-    // Spring注解：处理GET请求，映射到/goods路径
+
     public Result createGoods(@RequestBody goods goods){
-        // 查询商品列表的方法，返回统一响应结果
+
         goodsService.createGoods(goods);
-        // 调用服务层方法获取商品列表
+
         log.info("新增商品信息成功");
-        // 记录成功日志信息
+
         return Result.success(goods);
-        // 返回成功响应，包含商品列表数据
+
     }
     @DeleteMapping("/deleteGoods/{id}")
     public Result deleteGoods(@PathVariable int id){
-        // 查询商品列表的方法，返回统一响应结果
+
         goodsService.deleteGoods(id);
-        // 调用服务层方法获取商品列表
+
         log.info("删除商品信息成功");
-        // 记录成功日志信息
+
         return Result.success();
-        // 返回成功响应，包含商品列表数据
+
     }
     @PutMapping("/goodsMod/{id}")
     public Result goodsMod(@PathVariable int id, @RequestBody goods goods){
-        // 查询商品列表的方法，返回统一响应结果
+
         goodsService.goodsMod(id,goods);
-        // 调用服务层方法获取商品列表
+
         log.info("修改商品信息成功");
-        // 记录成功日志信息
+
         return Result.success(goods);
-        // 返回成功响应，包含商品列表数据
+
     }
     @GetMapping("/getPageList")
     public Result getPageList(@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10")Integer pageSize){

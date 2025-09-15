@@ -16,7 +16,7 @@ import java.util.List;
 public interface goodsMapper {
 
 
-    @Delete("delete from goods where #{id}")
+    @Delete("delete from goods where id=#{id}")
     void deleteGoods(int id);
 
     // 商品数据访问接口，公共访问修饰符
