@@ -53,35 +53,22 @@ public class goodsController {
         // 返回成功响应，包含商品列表数据
     }
     @PostMapping("/createGoods")
-
     public Result createGoods(@RequestBody goods goods){
-
         goodsService.createGoods(goods);
-
         log.info("新增商品信息成功");
-
         return Result.success(goods);
-
     }
     @DeleteMapping("/deleteGoods/{id}")
     public Result deleteGoods(@PathVariable int id){
-
         goodsService.deleteGoods(id);
-
         log.info("删除商品信息成功");
-
         return Result.success();
-
     }
     @PutMapping("/goodsMod/{id}")
     public Result goodsMod(@PathVariable int id, @RequestBody goods goods){
-
         goodsService.goodsMod(id,goods);
-
         log.info("修改商品信息成功");
-
         return Result.success(goods);
-
     }
     @GetMapping("/getPageList")
     public Result getPageList(@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10")Integer pageSize){
