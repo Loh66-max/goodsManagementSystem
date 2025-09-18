@@ -30,5 +30,6 @@ public interface goodsFromMapper {
     Integer total();
 
     @Select("select * from goodsfrom limit #{page},#{pageSize}")
+
     List<goodsfrom> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize);
 }

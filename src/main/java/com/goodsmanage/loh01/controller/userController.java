@@ -20,10 +20,12 @@ public class userController {
     @Qualifier("userServiceImpl")
     @Autowired
     private userService userservice;
-    @GetMapping("/getUser")
-    public Result result(){
-        List<user> list = userservice.list();
-        log.info("获取用户信息成功");
+    @PostMapping("/getUser")
+    public Result result(@RequestParam String num){
+        List<user> list = userservice.list(num);
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", num);
+        System.out.println(data);
         return Result.success(list);
     }
     @DeleteMapping("/userDelete/{id}")
@@ -47,12 +49,13 @@ public class userController {
 
     @GetMapping("/getUserList")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
+                              @RequestParam(defaultValue = "10") Integer pageSize,String num) {
         Integer total = userservice.total();
-        List<user> row = userservice.row((page - 1) * pageSize, pageSize);
+        List<user> row = userservice.row((page - 1) * pageSize, pageSize,num);
         Map<String, Object> data = new HashMap<>();
         data.put("list", row);
         data.put("total", total);
+        data.put("name",num);
         return Result.success(data);
     }
 }

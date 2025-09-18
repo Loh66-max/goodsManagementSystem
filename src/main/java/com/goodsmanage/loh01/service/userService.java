@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface userService {
 
-    List<user> list();
+    List<user> list(String num);
 
     void delete(Integer id);
 
@@ -18,5 +18,5 @@ public interface userService {
 
     Integer total();
 
-    List<user> row(Integer page, Integer pageSize);
+    List<user> row(Integer page, Integer pageSize,String num);
 }

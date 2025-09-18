@@ -7,8 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface userMapper {
-    @Select("SELECT * from user")
-    List<user> list();
+    @Select("select * from user where num like concat('%',#{num},'%')")
+    List<user> list(String num);
 
     @Delete("delete from user where id=#{id}")
     void delete(Integer id);
@@ -23,5 +23,5 @@ public interface userMapper {
     Integer total();
 
     @Select("select * from user limit #{page},#{pageSize}")
-    List<user> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize);
+    List<user> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize,String num);
 }

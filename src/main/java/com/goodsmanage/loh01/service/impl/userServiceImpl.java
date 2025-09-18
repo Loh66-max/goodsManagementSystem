@@ -12,8 +12,8 @@ public class userServiceImpl implements userService {
     @Autowired
     private userMapper userMapper;
     @Override
-    public List<user> list() {
-        return userMapper.list();
+    public List<user> list(String num) {
+        return userMapper.list(num);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class userServiceImpl implements userService {
     }
 
     @Override
-    public List<user> row(Integer page, Integer pageSize) {
-        return userMapper.rows(page,pageSize);
+    public List<user> row(Integer page, Integer pageSize,String num) {
+        return userMapper.rows(page,pageSize,num);
     }
 }

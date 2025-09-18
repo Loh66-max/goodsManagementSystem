@@ -14,6 +14,4 @@ public class goods {
     private String goodsFrom;
     private String goodsPrice;
     private String createTime;
-
-
 }

@@ -8,7 +8,8 @@ export default {
       tableData: [],
       pageSize: 10,
       pageNum: 1,
-      total:this.total
+      total:this.total,
+      input:''
     };
   },
   methods: {
@@ -25,6 +26,19 @@ export default {
             this.total = res.data.data.total;
           })
     },
+    loadGet01() {
+      this.$axios.post('http://localhost:8090/getUser', null, { params: { num: this.input }})
+          .then(res => {
+            console.log(res)
+            this.tableData = res.data.data;
+            // this.total = Array.isArray(this.tableData) ? this.tableData.length : 0;
+          })
+    },
+    reset(){
+      this.input='';
+      this.loadGet();
+
+    }
 
   },
   beforeMount() {
@@ -87,6 +101,13 @@ export default {
       </el-header>
       <!--Main主要内容-->
       <el-main style="border: 3px;margin-right: -10px">
+        <div>
+          <el-input placeholder="请输入查询条件" suffix-icon="el-icon-search" style="width: 300px" v-model="input"></el-input>
+          <el-button type="primary" style="margin-left: 10px" @click="loadGet01">查询</el-button>
+          <el-button type="danger" @click="reset">重置</el-button>
+        </div>
+
+
         <el-table :data="tableData"
                   border
                   :header-cell-style="{background:'#f2f5fc', color:'#555555' }">
