@@ -1,4 +1,4 @@
-package com.goodsmanage.loh01.pojo;
+package com.goodsmanage.loh01.entity;
 // 包声明，实体类包
 
 /**

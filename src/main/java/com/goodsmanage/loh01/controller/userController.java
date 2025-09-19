@@ -1,13 +1,14 @@
 package com.goodsmanage.loh01.controller;
 
-import com.goodsmanage.loh01.pojo.Result;
-import com.goodsmanage.loh01.pojo.page;
-import com.goodsmanage.loh01.pojo.user;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.goodsmanage.loh01.entity.Result;
+import com.goodsmanage.loh01.entity.User;
+import com.goodsmanage.loh01.entity.page;
 import com.goodsmanage.loh01.service.userService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,45 +18,55 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class userController {
-    @Qualifier("userServiceImpl")
     @Autowired
     private userService userservice;
-    @PostMapping("/getUser")
-    public Result result(@RequestParam String num){
-        List<user> list = userservice.list(num);
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", num);
-        System.out.println(data);
+    @GetMapping("/listUser")
+    public Result list(){
+        List<User> list = userservice.list();
+        log.info("success");
         return Result.success(list);
     }
-    @DeleteMapping("/userDelete/{id}")
-    public Result delete(@PathVariable Integer id){
-        userservice.delete(id);
-        log.info("根据ID删除{}成功",id);
-        return Result.success();
+    @PostMapping("/saveUser")
+    public boolean save(@RequestBody User user){
+        log.info("save user");
+        return userservice.save(user);
     }
-    @PostMapping("/userCreate")
-    public Result create(@RequestBody user user){
-        userservice.create(user);
-        log.info("添加成功");
-        return Result.success(user);
+    @PostMapping("/modUser")
+    public boolean mod(@RequestBody User user){
+        log.info("mod user");
+        return userservice.updateById(user);
     }
-    @PutMapping("/userMod/{id}")
-    public Result mod(@PathVariable Integer id, @RequestBody user user){
-        userservice.mod(id,user);
-        log.info("修改成功");
-        return Result.success(user);
+    @PostMapping("/saveOrUpdateUser")
+    public boolean saveOrUpdate(@RequestBody User user){
+        log.info("saveOrUpdate user");
+        return userservice.saveOrUpdate(user);
     }
-
-    @GetMapping("/getUserList")
+    @GetMapping("/deleteUser")
+    public boolean delete(Integer id){
+        log.info("delete user");
+        return userservice.removeById(id);
+    }
+    @PostMapping("/queryUser")
+    public Page<User> query(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestBody User user) {
+        // 创建分页对象
+        Page<User> pageInfo = new Page<>(page, pageSize);
+        // 创建查询条件
+        LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(StringUtils.isNotBlank(user.getNum()), User::getNum, user.getNum());
+        // 执行分页查询
+        return userservice.page(pageInfo, lambdaQueryWrapper);
+    }
+    @GetMapping("/pageUser")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "10") Integer pageSize,String num) {
+                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Integer total = userservice.total();
-        List<user> row = userservice.row((page - 1) * pageSize, pageSize,num);
+        List<User> row = userservice.row((page - 1) * pageSize, pageSize);
         Map<String, Object> data = new HashMap<>();
         data.put("list", row);
         data.put("total", total);
-        data.put("name",num);
         return Result.success(data);
     }
 }

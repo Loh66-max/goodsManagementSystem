@@ -10,5 +10,6 @@
         <module name="LOH-01" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="21" />
   </component>
 </project>

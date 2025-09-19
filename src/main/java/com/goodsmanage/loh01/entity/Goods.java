@@ -1,13 +1,10 @@
-package com.goodsmanage.loh01.pojo;
+package com.goodsmanage.loh01.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class goods {
+
+public class Goods {
     private int id;
     private String goodsName;
     private String goodsNumber;

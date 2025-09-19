@@ -1,27 +1,19 @@
 package com.goodsmanage.loh01.service;
 // 包声明，服务层包
 
-import com.goodsmanage.loh01.pojo.goodsfrom;
-import com.goodsmanage.loh01.pojo.page;
-import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.goodsmanage.loh01.entity.Goodsfrom;
+import com.goodsmanage.loh01.entity.User;
 
 import java.util.List;
 // 导入Spring Service注解
 
-@Service
+
 // Spring注解：标识这是一个服务类
-public interface goodsFromService {
+public interface goodsFromService  extends IService<Goodsfrom> {
 
-    List<goodsfrom> list();
-
-
-    void delete(Integer id);
-
-    void createGoodsFrom(goodsfrom goodsfrom);
-
-    void updateGoodsFrom(Integer id, goodsfrom goodsfrom);
 
     Integer total();
 
-    List<goodsfrom> rows(Integer page, Integer pageSize);
+    List<User> row(Integer page, Integer pageSize);
 }

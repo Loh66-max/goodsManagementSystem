@@ -14,32 +14,44 @@ export default {
   },
   methods: {
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.pageNum=val
-      this.loadGet()
+      this.pageNum = val;
+      this.loadGet();
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.pageNum = 1; // 每页大小改变时，重置到第一页
+      this.loadGet();
     },
     loadGet() {
-      this.$axios.get('http://localhost:8090/getUserList',{params:{page:this.pageNum,pageSize:this.pageSize}})
-          .then(res => {
-            console.log(res)
-            this.tableData = res.data.data.list;
-            this.total = res.data.data.total;
-          })
+      if (this.input) {
+        // 条件查询接口
+        this.$axios.post('http://localhost:8090/queryUser',
+            { num: this.input },
+            { params: { page: this.pageNum, pageSize: this.pageSize } }
+        ).then(res => {
+          console.log(res)
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+        })
+      } else {
+        // 普通分页查询接口
+        this.$axios.get('http://localhost:8090/pageUser', { params: { page: this.pageNum, pageSize: this.pageSize } })
+            .then(res => {
+              console.log(res)
+              this.tableData = res.data.data.list;
+              this.total = res.data.data.total;
+            })
+      }
     },
-    loadGet01() {
-      this.$axios.post('http://localhost:8090/getUser', null, { params: { num: this.input }})
-          .then(res => {
-            console.log(res)
-            this.tableData = res.data.data;
-            // this.total = Array.isArray(this.tableData) ? this.tableData.length : 0;
-          })
-    },
-    reset(){
-      this.input='';
+    search() {
+      this.pageNum = 1; // 查询时重置为第一页
       this.loadGet();
-
+    },
+    reset() {
+      this.input = '';
+      this.pageNum = 1;
+      this.loadGet();
     }
-
   },
   beforeMount() {
     this.loadGet();
@@ -103,20 +115,16 @@ export default {
       <el-main style="border: 3px;margin-right: -10px">
         <div>
           <el-input placeholder="请输入查询条件" suffix-icon="el-icon-search" style="width: 300px" v-model="input"></el-input>
-          <el-button type="primary" style="margin-left: 10px" @click="loadGet01">查询</el-button>
+          <el-button type="primary" style="margin-left: 10px" @click="search">查询</el-button>
           <el-button type="danger" @click="reset">重置</el-button>
         </div>
-
-
         <el-table :data="tableData"
                   border
                   :header-cell-style="{background:'#f2f5fc', color:'#555555' }">
-
           <el-table-column prop="id" label="序号">
           </el-table-column>
           <el-table-column prop="num" label="账号">
           </el-table-column>
-
           <el-table-column prop="role" label="身份">
             <template slot-scope="scope">
               <el-tag
@@ -145,7 +153,7 @@ export default {
               @current-change="handleCurrentChange"
               :current-page="pageNum"
               :page-size="pageSize"
-              layout="total,  prev, pager, next, jumper"
+              layout="total, prev, pager, next, jumper"
               :total="total">
           </el-pagination>
         </div>
@@ -164,10 +172,8 @@ export default {
 .el-aside {
   color: #2b2a2a;
 }
-
 .el-main {
   padding: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
-
 </style>

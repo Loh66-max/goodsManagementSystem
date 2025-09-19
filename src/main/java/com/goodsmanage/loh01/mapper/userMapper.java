@@ -1,27 +1,17 @@
 package com.goodsmanage.loh01.mapper;
 
-import com.goodsmanage.loh01.pojo.user;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.goodsmanage.loh01.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
-public interface userMapper {
-    @Select("select * from user where num like concat('%',#{num},'%')")
-    List<user> list(String num);
-
-    @Delete("delete from user where id=#{id}")
-    void delete(Integer id);
-
-    @Insert("insert into user(id,num,password,role,value) values (#{id},#{num},#{password},#{role},#{value})")
-    void create(user user);
-
-    @Update("update user set num=#{user.num},password=#{user.password},role=#{user.role},value=#{user.value} where id=#{id}")
-    void mod(@Param("id") Integer id, @Param("user") user user);
+public interface userMapper extends BaseMapper<User> {
 
     @Select("select count(*) from  user")
     Integer total();
 
     @Select("select * from user limit #{page},#{pageSize}")
-    List<user> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize,String num);
+    List<User> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize);
 }

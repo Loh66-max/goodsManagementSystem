@@ -1,14 +1,20 @@
 package com.goodsmanage.loh01.controller;
 // 包声明，控制器层包
 
-import com.goodsmanage.loh01.pojo.goodsfrom;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.goodsmanage.loh01.entity.User;
+import com.goodsmanage.loh01.entity.Goodsfrom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.goodsmanage.loh01.service.goodsFromService;
-import com.goodsmanage.loh01.pojo.Result;
+import com.goodsmanage.loh01.entity.Result;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // 导入Spring Web REST控制器注解
 @Slf4j
@@ -19,37 +25,55 @@ public class goodsFromController {
     @Autowired
     //这行代码为了能够私有访问到Service
     private goodsFromService goodsFromService;
-
-    @GetMapping("/goodsfrom")
-    public Result list() {
-        List<goodsfrom> goodsFromList=goodsFromService.list();
-        log.info("获取商品来源信息成功");
-        return Result.success(goodsFromList);
+    @GetMapping("/listUser")
+    public Result list(){
+        List<Goodsfrom> list = goodsFromService.list();
+        log.info("success");
+        return Result.success(list);
     }
-    @DeleteMapping("/goodsfrom/{id}")
-    public Result delete(@PathVariable Integer id) {
-        goodsFromService.delete(id);
-        log.info("删除商品品牌{}成功",id);
-        return Result.success();
+    @PostMapping("/saveUser")
+    public boolean save(@RequestBody Goodsfrom goodsfrom){
+        log.info("save user");
+        return goodsFromService.save(goodsfrom);
     }
-    @PostMapping("/createGoodsFrom")
-    public Result createGoodsFrom(@RequestBody goodsfrom goodsfrom){
-        goodsFromService.createGoodsFrom(goodsfrom);
-        log.info("新增商品来源信息成功");
-        return Result.success(goodsfrom);
+    @PostMapping("/modUser")
+    public boolean mod(@RequestBody Goodsfrom goodsfrom){
+        log.info("mod user");
+        return goodsFromService.updateById(goodsfrom);
     }
-    @PutMapping("/goodsFromMod/{id}")
-    public Result updateGoodsFrom(@PathVariable Integer id, @RequestBody goodsfrom goodsfrom){
-        goodsFromService.updateGoodsFrom(id,goodsfrom);
-        log.info("修改商品来源信息成功");
-        return Result.success(goodsfrom);
+    @PostMapping("/saveOrUpdateUser")
+    public boolean saveOrUpdate(@RequestBody Goodsfrom goodsfrom){
+        log.info("saveOrUpdate user");
+        return goodsFromService.saveOrUpdate(goodsfrom);
     }
-    @GetMapping("/goodsFromList")
-    public Result goodsFromList(@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10") Integer pageSize){
+    @GetMapping("/deleteUser")
+    public boolean delete(Integer id){
+        log.info("delete user");
+        return goodsFromService.removeById(id);
+    }
+    @PostMapping("/queryUser")
+    public Page<Goodsfrom> query(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestBody Goodsfrom goodsfrom) {
+        // 创建分页对象
+        Page<Goodsfrom> pageInfo = new Page<>(page, pageSize);
+        // 创建查询条件
+        LambdaQueryWrapper<Goodsfrom> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(StringUtils.isNotBlank(goodsfrom.getName()), Goodsfrom::getName, goodsfrom.getName());
+        // 执行分页查询
+        return goodsFromService.page(pageInfo, lambdaQueryWrapper);
+    }
+    @GetMapping("/pageUser")
+    public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Integer total = goodsFromService.total();
-        List<goodsfrom> goodsFromList = goodsFromService.rows(page-1,pageSize);
-        log.info("获取商品来源信息列表成功！商品信息来源字段总个数为："+total);
-        return Result.success(goodsFromList);
+        List<User> row = goodsFromService.row((page - 1) * pageSize, pageSize);
+        Map<String, Object> data = new HashMap<>();
+        data.put("list", row);
+        data.put("total", total);
+        return Result.success(data);
     }
+
 
 }
