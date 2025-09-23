@@ -32,7 +32,7 @@ public class goodsServiceImpl extends ServiceImpl<goodsMapper, Goods> implements
     }
 
     @Override
-    public List<User> row(Integer page, Integer pageSize) {
+    public List<Goods> row(Integer page, Integer pageSize) {
         return GoodsMapper.rows(page, pageSize);
     }
     // 商品数据访问对象，私有访问修饰符

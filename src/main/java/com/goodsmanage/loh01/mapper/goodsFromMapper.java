@@ -17,5 +17,5 @@ public interface goodsFromMapper extends BaseMapper<Goodsfrom> {
     Integer total();
 
     @Select("select * from user limit #{page},#{pageSize}")
-    List<User> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize);
+    List<Goodsfrom> rows(@Param("page") Integer page,@Param("pageSize") Integer pageSize);
 }

@@ -27,7 +27,7 @@ public class goodsFromServiceImpl extends ServiceImpl<goodsFromMapper, Goodsfrom
     }
 
     @Override
-    public List<User> row(Integer page, Integer pageSize) {
+    public List<Goodsfrom> row(Integer page, Integer pageSize) {
         return goodsFromMapper.rows(page,pageSize);
     }
 }

@@ -37,33 +37,33 @@ public class goodsController {
 
     @Autowired
     private goodsService goodsService;
-    @GetMapping("/listUser")
+    @GetMapping("/listGoods")
     public Result list(){
         List<Goods> list = goodsService.list();
         log.info("success");
         return Result.success(list);
     }
-    @PostMapping("/saveUser")
+    @PostMapping("/saveGoods")
     public boolean save(@RequestBody Goods goods){
         log.info("save user");
         return goodsService.save(goods);
     }
-    @PostMapping("/modUser")
+    @PostMapping("/modGoods")
     public boolean mod(@RequestBody Goods goods){
         log.info("mod user");
         return goodsService.updateById(goods);
     }
-    @PostMapping("/saveOrUpdateUser")
+    @PostMapping("/saveOrUpdateGoods")
     public boolean saveOrUpdate(@RequestBody Goods goods){
         log.info("saveOrUpdate user");
         return goodsService.saveOrUpdate(goods);
     }
-    @GetMapping("/deleteUser")
+    @GetMapping("/deleteGoods")
     public boolean delete(Integer id){
         log.info("delete user");
         return goodsService.removeById(id);
     }
-    @PostMapping("/queryUser")
+    @PostMapping("/queryGoods")
     public Page<Goods> query(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -76,11 +76,11 @@ public class goodsController {
         // 执行分页查询
         return goodsService.page(pageInfo, lambdaQueryWrapper);
     }
-    @GetMapping("/pageUser")
+    @GetMapping("/pageGoods")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "10") Integer pageSize) {
         Integer total = goodsService.total();
-        List<User> row = goodsService.row((page - 1) * pageSize, pageSize);
+        List<Goods> row = goodsService.row((page - 1) * pageSize, pageSize);
         Map<String, Object> data = new HashMap<>();
         data.put("list", row);
         data.put("total", total);

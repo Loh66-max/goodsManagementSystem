@@ -1,17 +1,21 @@
 <template>
   <div id="app">
-    <main-page></main-page>
+<!--    <user-login></user-login>-->
+<!--    <main-page></main-page>-->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 
-import MainPage from "@/components/mainPage.vue";
+// import MainPage from "@/components/mainPage.vue";
+// import userLogin from "@/components/userLogin.vue";
 
 export default {
   name: 'App',
   components: {
-    MainPage,
+    // MainPage
+    // userLogin
   }
 }
 </script>

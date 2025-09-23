@@ -1,82 +1,72 @@
 <script>
-
 export default {
   name: "mainPage",
   data() {
     return {
+      navList: [
+        {name: "/main", navItem: "首页"},
+        {name: "/userManage", navItem: "用户管理"},
+        {name: "/goodsManage", navItem: "货品管理"},
+      ],
       isCollapse: true,
-      tableData: [],
-      pageSize: 10,
-      pageNum: 1,
-      total:this.total,
-      input:''
+      activeIndex: 'mainPage'
     };
   },
   methods: {
-    handleCurrentChange(val) {
-      this.pageNum = val;
-      this.loadGet();
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath);
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.pageNum = 1; // 每页大小改变时，重置到第一页
-      this.loadGet();
-    },
-    loadGet() {
-      if (this.input) {
-        // 条件查询接口
-        this.$axios.post('http://localhost:8090/queryUser',
-            { num: this.input },
-            { params: { page: this.pageNum, pageSize: this.pageSize } }
-        ).then(res => {
-          console.log(res)
-          this.tableData = res.data.records;
-          this.total = res.data.total;
-        })
-      } else {
-        // 普通分页查询接口
-        this.$axios.get('http://localhost:8090/pageUser', { params: { page: this.pageNum, pageSize: this.pageSize } })
-            .then(res => {
-              console.log(res)
-              this.tableData = res.data.data.list;
-              this.total = res.data.data.total;
-            })
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.logout();
+      } else if (command === 'profile') {
+        this.$message.info('个人中心功能开发中...');
       }
     },
-    search() {
-      this.pageNum = 1; // 查询时重置为第一页
-      this.loadGet();
-    },
-    reset() {
-      this.input = '';
-      this.pageNum = 1;
-      this.loadGet();
+    logout() {
+      this.$confirm('确定要退出登录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 清除本地存储的用户信息
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('isLoggedIn');
+
+        this.$message.success('退出成功');
+
+        // 跳转到登录页
+        this.$router.push('/');
+      }).catch(() => {
+        this.$message.info('已取消退出');
+      });
     }
-  },
-  beforeMount() {
-    this.loadGet();
   }
 };
 </script>
+
 <template>
   <el-container style="height: 680px">
-
     <!--Menu菜单内容-->
     <el-aside style="width: 200px;background-color:#545c64;margin-left: -10px;margin-top: -10px;margin-right: 3px">
-      <el-menu active-text-color="#ffd04b"
-               background-color="#545c64"
-               text-color="#fff"
-               default-active="/Home">
-        <el-menu-item index="/Home"><i class="el-icon-message"></i>首页</el-menu-item>
-        <el-menu-item index="/ONE"><i class="el-icon-message"></i>首页</el-menu-item>
-        <el-menu-item index="/twe"><i class="el-icon-message"></i>首页</el-menu-item>
+      <el-menu
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          text-color="#fff"
+          :default-active="$route.path"
+          router
+          @select="handleSelect"
+      >
+        <el-menu-item v-for="(item, i) in navList" :key="i" :index="item.name">
+          <i class="el-icon-message"></i>
+          <span> {{ item.navItem }}</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
     <el-container>
       <!--Header标题内容-->
       <el-header style="margin-top: -10px;margin-right: -10px">
-
         <div style="display: flex">
           <div style="text-align: left">
             <el-menu
@@ -93,77 +83,41 @@ export default {
                 <el-menu-item index="2-2">选项2</el-menu-item>
                 <el-menu-item index="2-3">选项3</el-menu-item>
               </el-submenu>
-              <el-menu-item index="4"><a href="https://www.ele.me" target="_blank"><span
-                  style="font-weight: bold">订单管理</span></a></el-menu-item>
+              <el-menu-item index="4">
+                <a href="https://www.ele.me" target="_blank">
+                  <span style="font-weight: bold">订单管理</span>
+                </a>
+              </el-menu-item>
             </el-menu>
           </div>
-          <div style="flex: 1;text-align: center"><span
-              style="font-weight: bolder;font-size: 30px;color: black;margin-right: 100px">进销存仓库管理系统</span>
+          <div style="flex: 1;text-align: center">
+            <span style="font-weight: bolder;font-size: 30px;color: black;margin-right: 100px">
+              进销存仓库管理系统
+            </span>
           </div>
 
           <span style="font-size: 12px;font-weight: bold;color: black">王小虎</span>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <i class="el-icon-arrow-down"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </el-header>
+
       <!--Main主要内容-->
       <el-main style="border: 3px;margin-right: -10px">
-        <div>
-          <el-input placeholder="请输入查询条件" suffix-icon="el-icon-search" style="width: 300px" v-model="input"></el-input>
-          <el-button type="primary" style="margin-left: 10px" @click="search">查询</el-button>
-          <el-button type="danger" @click="reset">重置</el-button>
-        </div>
-        <el-table :data="tableData"
-                  border
-                  :header-cell-style="{background:'#f2f5fc', color:'#555555' }">
-          <el-table-column prop="id" label="序号">
-          </el-table-column>
-          <el-table-column prop="num" label="账号">
-          </el-table-column>
-          <el-table-column prop="role" label="身份">
-            <template slot-scope="scope">
-              <el-tag
-                  :type="scope.row.role === 0 ? 'danger' : (scope.row.role === 1 ? 'primary' : 'success')"
-                  disable-transitions>
-                {{ scope.row.role === 0 ? '超级管理员' : (scope.row.role === 1 ? '管理员' : '用户') }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="value" label="是否激活">
-            <template slot-scope="scope">
-              <el-tag
-                  :type="scope.row.value === '0'? 'primary' :  'danger'"
-                  disable-transitions>{{ scope.row.value === '0' ? '已激活' : '未激活' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <el-button type="success" @click="dialogFormVisible=true">编辑</el-button>
-            <el-button type="danger">删除</el-button>
-          </el-table-column>
-        </el-table>
-        <div style="text-align: center">
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="pageNum"
-              :page-size="pageSize"
-              layout="total, prev, pager, next, jumper"
-              :total="total">
-          </el-pagination>
-        </div>
+        <!-- 路由视图，显示子组件 -->
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
+
 <style scoped>
 .el-header {
-
   background-color: rgb(238, 241, 246);
   line-height: 60px;
   border-radius: 4px;
@@ -172,6 +126,7 @@ export default {
 .el-aside {
   color: #2b2a2a;
 }
+
 .el-main {
   padding: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)

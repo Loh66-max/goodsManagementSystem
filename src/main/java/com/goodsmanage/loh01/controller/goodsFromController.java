@@ -25,33 +25,33 @@ public class goodsFromController {
     @Autowired
     //这行代码为了能够私有访问到Service
     private goodsFromService goodsFromService;
-    @GetMapping("/listUser")
+    @GetMapping("/listGoodsFrom")
     public Result list(){
         List<Goodsfrom> list = goodsFromService.list();
         log.info("success");
         return Result.success(list);
     }
-    @PostMapping("/saveUser")
+    @PostMapping("/saveGoodsFrom")
     public boolean save(@RequestBody Goodsfrom goodsfrom){
         log.info("save user");
         return goodsFromService.save(goodsfrom);
     }
-    @PostMapping("/modUser")
+    @PostMapping("/modGoodsFrom")
     public boolean mod(@RequestBody Goodsfrom goodsfrom){
         log.info("mod user");
         return goodsFromService.updateById(goodsfrom);
     }
-    @PostMapping("/saveOrUpdateUser")
+    @PostMapping("/saveOrUpdateGoodsFrom")
     public boolean saveOrUpdate(@RequestBody Goodsfrom goodsfrom){
         log.info("saveOrUpdate user");
         return goodsFromService.saveOrUpdate(goodsfrom);
     }
-    @GetMapping("/deleteUser")
+    @GetMapping("/deleteGoodsFrom")
     public boolean delete(Integer id){
         log.info("delete user");
         return goodsFromService.removeById(id);
     }
-    @PostMapping("/queryUser")
+    @PostMapping("/queryGoodsFrom")
     public Page<Goodsfrom> query(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -64,11 +64,11 @@ public class goodsFromController {
         // 执行分页查询
         return goodsFromService.page(pageInfo, lambdaQueryWrapper);
     }
-    @GetMapping("/pageUser")
+    @GetMapping("/pageGoodsFrom")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "10") Integer pageSize) {
         Integer total = goodsFromService.total();
-        List<User> row = goodsFromService.row((page - 1) * pageSize, pageSize);
+        List<Goodsfrom> row = goodsFromService.row((page - 1) * pageSize, pageSize);
         Map<String, Object> data = new HashMap<>();
         data.put("list", row);
         data.put("total", total);

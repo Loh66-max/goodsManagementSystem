@@ -59,6 +59,48 @@ public class userController {
         // 执行分页查询
         return userservice.page(pageInfo, lambdaQueryWrapper);
     }
+    @PostMapping("/login")
+    public Result login(@RequestBody User user) {
+        try {
+            // 参数验证
+            if (StringUtils.isBlank(user.getNum())) {
+                log.warn("登录失败：用户名为空");
+                return Result.error("用户名不能为空");
+            }
+            if (StringUtils.isBlank(user.getPassword())) {
+                log.warn("登录失败：密码为空");
+                return Result.error("密码不能为空");
+            }
+
+            // 构建查询条件
+            LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(User::getNum, user.getNum())
+                    .eq(User::getPassword, user.getPassword());
+
+            // 执行查询
+            User loginUser = userservice.getOne(lambdaQueryWrapper);
+            System.out.println(loginUser);
+
+            if (loginUser != null) {
+                // 登录成功，返回用户信息（不包含密码）
+                Map<String, Object> userInfo = new HashMap<>();
+                userInfo.put("id", loginUser.getId());
+                userInfo.put("num", loginUser.getNum());
+                userInfo.put("role", loginUser.getRole());
+                userInfo.put("value", loginUser.getValue());
+
+                log.info("用户 {} 登录成功", user.getNum());
+                return Result.success(userInfo);
+            } else {
+                // 登录失败
+                log.warn("用户 {} 登录失败：用户名或密码错误", user.getNum());
+                return Result.error("用户名或密码错误");
+            }
+        } catch (Exception e) {
+            log.error("登录过程中发生异常：{}", e.getMessage(), e);
+            return Result.error("登录失败，请稍后重试");
+        }
+    }
     @GetMapping("/pageUser")
     public Result getUserList(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "10") Integer pageSize) {

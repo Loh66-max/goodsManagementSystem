@@ -15,9 +15,9 @@ import java.util.List;
 @Mapper
 // MyBatis注解：标识这是一个Mapper接口，Spring会自动创建实现类
 public interface goodsMapper extends BaseMapper<Goods> {
-    @Select("select count(*) from  user")
+    @Select("select count(*) from  goods")
     Integer total();
 
-    @Select("select * from user limit #{page},#{pageSize}")
-    List<User> rows(@Param("page") Integer page, @Param("pageSize") Integer pageSize);
+    @Select("select * from goods limit #{page},#{pageSize}")
+    List<Goods> rows(@Param("page") Integer page, @Param("pageSize") Integer pageSize);
 }

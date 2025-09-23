@@ -17,5 +17,5 @@ public interface goodsService extends IService<Goods> {
 
     Integer total();
 
-    List<User> row(Integer page, Integer pageSize);
+    List<Goods> row(Integer page, Integer pageSize);
 }
