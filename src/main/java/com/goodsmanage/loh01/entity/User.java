@@ -7,7 +7,7 @@ public class User {
     private int id;
     private String num;
     private String password;
-    private int role;
+    private String role;
     private String value;
 
 }
